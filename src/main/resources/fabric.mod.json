@@ -1,0 +1,34 @@
+{
+"schemaVersion": 1,
+"id": "priority",
+"version": "${version}",
+"name": "Priority",
+"description": "A mod that allows customizing the priority order of hotbar slots for key bindings.",
+"authors": [
+"aman037"
+],
+"license": "MIT",
+"icon": "assets/priority/icon.png",
+"environment": "*",
+"entrypoints": {
+"main": [
+"com.example.PriorityMod"
+],
+"modmenu": [
+"com.example.HotbarPriorityModMenuApiImpl"
+]
+},
+"mixins": [
+"priority.mixins.json"
+],
+"depends": {
+"fabricloader": ">=0.14.0",
+"minecraft": ">=1.16.5",
+"java": ">=8",
+"fabric-api": ">=0.46.0",
+"cloth-config": ">=4.0.0"
+},
+"suggests": {
+"modmenu": ">=2.0.0"
+}
+}
