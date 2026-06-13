@@ -5,7 +5,8 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.option.KeyBinding;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -22,12 +23,11 @@ public class MinecraftClientMixin {
         method = "handleInputEvents",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/options/KeyBinding;wasPressed()Z"
+            target = "Lnet/minecraft/client/option/KeyBinding;wasPressed()Z"
         )
     )
     private boolean redirectWasPressed(KeyBinding keyBinding) {
         MinecraftClient client = (MinecraftClient) (Object) this;
-
         KeyBinding[] hotbarKeys = client.options.keysHotbar;
         int thisKeyIndex = -1;
         for (int i = 0; i < hotbarKeys.length; i++) {
@@ -36,17 +36,13 @@ public class MinecraftClientMixin {
                 break;
             }
         }
-
         if (thisKeyIndex == -1) {
             return keyBinding.wasPressed();
         }
-
         HotbarPriorityConfig config = AutoConfig.getConfigHolder(HotbarPriorityConfig.class).getConfig();
-
         if (!checkedThisTick) {
             winningKeyIndex = -1;
             highestPriority = Integer.MAX_VALUE;
-
             for (int i = 0; i < hotbarKeys.length; i++) {
                 if (hotbarKeys[i].isPressed()) {
                     int priority = config.getSlotPriority(i);
@@ -58,7 +54,6 @@ public class MinecraftClientMixin {
             }
             checkedThisTick = true;
         }
-
         if (thisKeyIndex == winningKeyIndex) {
             checkedThisTick = false;
             return keyBinding.wasPressed();
